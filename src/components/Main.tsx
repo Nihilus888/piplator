@@ -6,9 +6,10 @@ const Main: React.FC = () => {
   const [stopLoss, setStopLoss] = useState<number | ''>('');
   const [takeProfit, setTakeProfit] = useState<number | ''>('');
   const [volume, setVolume] = useState<number | ''>('');
+  const [isUSDJPY, setIsUSDJPY] = useState<boolean>(true); // Track if it's USD/JPY or other pair
 
-  // Approximate pip value for GBP/USD (for 1 standard lot)
-  const pipValue = 10; // USD per pip for 1 standard lot
+  // Pip value and pip calculation logic for EUR/USD and USD/JPY
+  const pipValue = entryPrice ? (isUSDJPY ? 1000 / entryPrice : 10) : 0; // USD/JPY or EUR/USD pip value
 
   const calculate = () => {
     if (entryPrice === '' || stopLoss === '' || takeProfit === '' || volume === '') return null;
@@ -16,10 +17,10 @@ const Main: React.FC = () => {
     // Convert volume (lots) to number
     const volumeValue = Number(volume);
 
-    // Calculate the pips difference (Risk and Reward)
-    const riskPips = Math.abs(entryPrice - stopLoss) / 0.0001;
-    const rewardPips = Math.abs(entryPrice - takeProfit) / 0.0001;
-
+    // Calculate pips difference (Risk and Reward)
+    const pipSize = isUSDJPY ? 0.01 : 0.0001; // USD/JPY uses 0.01, others like EUR/USD use 0.0001
+    const riskPips = Math.abs(entryPrice - stopLoss) / pipSize;
+    const rewardPips = Math.abs(entryPrice - takeProfit) / pipSize;
 
     // Calculate dollar amounts for risk and reward, scaled by the volume
     const riskAmount = riskPips * pipValue * volumeValue;  // Scale by volume (lot size)
@@ -39,7 +40,7 @@ const Main: React.FC = () => {
 
   return (
     <main className="max-w-xl mx-auto px-6 py-8 bg-gray-900 rounded-lg shadow-lg text-white mt-20">
-      <h2 className="text-2xl font-bold mb-6 text-center">USD currency calculator</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center">{isUSDJPY ? 'USD/JPY Currency Calculator' : 'GBP/USD Currency Calculator'}</h2>
 
       <div className="grid grid-cols-2 gap-4">
         {/* Entry Price */}
@@ -47,7 +48,7 @@ const Main: React.FC = () => {
           Entry Price
           <input
             type="number"
-            step="0.0001"
+            step={isUSDJPY ? "0.01" : "0.0001"}
             value={entryPrice}
             onChange={(e) => setEntryPrice(e.target.value === '' ? '' : Number(e.target.value))}
             className="mt-1 p-2 rounded bg-gray-800 text-white border border-gray-700"
@@ -59,7 +60,7 @@ const Main: React.FC = () => {
           Stop Loss
           <input
             type="number"
-            step="0.0001"
+            step={isUSDJPY ? "0.01" : "0.0001"}
             value={stopLoss}
             onChange={(e) => setStopLoss(e.target.value === '' ? '' : Number(e.target.value))}
             className="mt-1 p-2 rounded bg-gray-800 text-white border border-gray-700"
@@ -71,7 +72,7 @@ const Main: React.FC = () => {
           Take Profit
           <input
             type="number"
-            step="0.0001"
+            step={isUSDJPY ? "0.01" : "0.0001"}
             value={takeProfit}
             onChange={(e) => setTakeProfit(e.target.value === '' ? '' : Number(e.target.value))}
             className="mt-1 p-2 rounded bg-gray-800 text-white border border-gray-700"
@@ -90,6 +91,16 @@ const Main: React.FC = () => {
           className="mt-1 p-2 rounded bg-gray-800 text-white border border-gray-700"
         />
       </label>
+
+      {/* Toggle Button */}
+      <div className="mt-6 text-center">
+        <button
+          onClick={() => setIsUSDJPY(!isUSDJPY)}
+          className="px-4 py-2 bg-blue-600 text-white rounded"
+        >
+          Switch to {isUSDJPY ? 'GBP/USD' : 'USD/JPY'} Calculator
+        </button>
+      </div>
 
       {results && (
         <div className="mt-6 text-center">
