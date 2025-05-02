@@ -6,6 +6,7 @@ const Header: React.FC = () => {
       <h1 className="text-4xl font-bold text-white">Piplator: Pip Calculator for MT4/MT5</h1>
       <p className="text-gray-400 mt-2 text-base">
         Instant SL, TP and Risk Management – No More Manual Math.
+        Mainly for US Currencies for now.
       </p>
     </header>
   );
