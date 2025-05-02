@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://piplator-dn3j.vercel.app/sitemap.xml
