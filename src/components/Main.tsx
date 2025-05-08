@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 const currencyPairs = [
   'USD/JPY',
@@ -52,7 +52,7 @@ const Main: React.FC = () => {
   const [selectedPair, setSelectedPair] = useState('GBP/USD');
   const [selectedAccountSize, setAccountSize] = useState('100,000')
 
-  const pipSize = selectedPair && typeof entryPrice === 'number' ? getPipSize(selectedPair) : 0;
+  const pipSize = useMemo(() => getPipSize(selectedPair), [selectedPair]);
   const pipValue = typeof entryPrice === 'number' ? getPipValue(selectedPair, entryPrice) : 0;
 
 
@@ -77,6 +77,7 @@ const Main: React.FC = () => {
       riskAmount,
       rewardAmount,
       rrr: rrr.toFixed(2),
+      lotSize: lotSize.toFixed(2)
     };
   };
 
@@ -172,6 +173,7 @@ const Main: React.FC = () => {
           <p>📉 Risk: <strong>${results.riskAmount.toFixed(2)}</strong></p>
           <p>📈 Reward: <strong>${results.rewardAmount.toFixed(2)}</strong></p>
           <p>📊 Risk-Reward Ratio: <strong>{results.rrr}</strong></p>
+          <p>📊 Lot Size: <strong>{results.lotSize}</strong></p>
         </div>
       )}
     </main>
