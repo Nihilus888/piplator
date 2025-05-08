@@ -1,6 +1,5 @@
 'use client'
 import React, { useState } from 'react';
-import { Analytics } from "@vercel/analytics/react"
 
 const currencyPairs = [
   'USD/JPY',
@@ -11,6 +10,15 @@ const currencyPairs = [
   'USD/CHF',
   'NZD/USD',
 ];
+
+const accountSize = [
+  '10,000',
+  '25,000',
+  '50,000',
+  '100,000',
+  '200,000',
+]
+
 
 const getPipSize = (pair: string) => {
   return pair === 'USD/JPY' ? 0.01 : 0.0001;
@@ -42,12 +50,16 @@ const Main: React.FC = () => {
   const [takeProfit, setTakeProfit] = useState<number | ''>('');
   const [volume, setVolume] = useState<number | ''>('');
   const [selectedPair, setSelectedPair] = useState('GBP/USD');
+  const [selectedAccountSize, setAccountSize] = useState('100,000')
 
   const pipSize = selectedPair && typeof entryPrice === 'number' ? getPipSize(selectedPair) : 0;
   const pipValue = typeof entryPrice === 'number' ? getPipValue(selectedPair, entryPrice) : 0;
 
+
   const calculate = () => {
     if (entryPrice === '' || stopLoss === '' || takeProfit === '' || volume === '') return null;
+
+    const numericAccountSize = Number(selectedAccountSize.replace(/,/g, ''));
 
     const volumeValue = Number(volume);
     const riskPips = Math.abs(entryPrice - stopLoss) / pipSize;
@@ -56,6 +68,10 @@ const Main: React.FC = () => {
     const riskAmount = riskPips * pipValue * volumeValue;
     const rewardAmount = rewardPips * pipValue * volumeValue;
     const rrr = rewardPips / riskPips;
+
+    const riskPercent = 1; // 1% risk
+    const riskDollarAmount = (numericAccountSize * riskPercent) / 100;
+    const lotSize = riskDollarAmount / (riskPips * pipValue);
 
     return {
       riskAmount,
@@ -84,6 +100,22 @@ const Main: React.FC = () => {
           ))}
         </select>
       </div>
+
+      {/* Account Size Selector */}
+      <div className="text-center mb-6">
+        <label htmlFor="account-size" className="mr-2 font-semibold">Account Size:</label>
+        <select
+          id="account-size"
+          value={selectedAccountSize}
+          onChange={(e) => setAccountSize(e.target.value)}
+          className="px-4 py-2 rounded bg-gray-800 text-white border border-gray-700"
+        >
+          {accountSize.map((size) => (
+            <option key={size} value={size}>{`$${size}`}</option>
+          ))}
+        </select>
+      </div>
+
 
       <div className="grid grid-cols-2 gap-4">
         {/* Entry Price */}
