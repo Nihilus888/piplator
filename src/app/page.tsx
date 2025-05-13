@@ -1,13 +1,21 @@
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import Main from '../components/Main';
+import ErrorBoundary from '../components/ErrorBoundary'
 import { Analytics } from "@vercel/analytics/react";
+import { lazy, Suspense } from 'react';
+
+const Main= lazy(() => import('../components/Main'));
 
 export default function Home() {
+
   return (
     <>
       <Header/>
-      <Main />
+      <ErrorBoundary>
+        <Suspense fallback={<div className="loader">Loading content...</div>}>
+          <Main />
+        </Suspense>
+      </ErrorBoundary>
       <Footer/>
       <Analytics />
     </>

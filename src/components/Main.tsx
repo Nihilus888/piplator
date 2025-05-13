@@ -69,7 +69,7 @@ const Main: React.FC = () => {
     const rewardAmount = rewardPips * pipValue * volumeValue;
     const rrr = rewardPips / riskPips;
 
-    const riskPercent = 1; // 1% risk
+    const riskPercent = 1; // 1% risk (strictly hardcoded for discipline to risk percentage)
     const riskDollarAmount = (numericAccountSize * riskPercent) / 100;
     const lotSize = riskDollarAmount / (riskPips * pipValue);
 
