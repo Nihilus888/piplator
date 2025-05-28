@@ -55,19 +55,18 @@ const Main: React.FC = () => {
   const pipSize = useMemo(() => getPipSize(selectedPair), [selectedPair]);
   const pipValue = typeof entryPrice === 'number' ? getPipValue(selectedPair, entryPrice) : 0;
 
-
   const calculate = () => {
     if (entryPrice === '' || stopLoss === '' || takeProfit === '' || volume === '') return null;
 
     const numericAccountSize = Number(selectedAccountSize.replace(/,/g, ''));
 
     const volumeValue = Number(volume);
-    const riskPips = Math.abs(entryPrice - stopLoss) / pipSize;
-    const rewardPips = Math.abs(entryPrice - takeProfit) / pipSize;
+    const riskPips = Number(Math.abs(entryPrice - stopLoss) / pipSize);
+    const rewardPips = Number(Math.abs(entryPrice - takeProfit) / pipSize);
 
-    const riskAmount = riskPips * pipValue * volumeValue;
-    const rewardAmount = rewardPips * pipValue * volumeValue;
-    const rrr = rewardPips / riskPips;
+    const riskAmount = Number(riskPips * pipValue * volumeValue);
+    const rewardAmount = Number(rewardPips * pipValue * volumeValue);
+    const rrr = Number(rewardPips / riskPips);
 
     const riskPercent = 1; // 1% risk (strictly hardcoded for discipline to risk percentage)
     const riskDollarAmount = (numericAccountSize * riskPercent) / 100;
@@ -81,7 +80,7 @@ const Main: React.FC = () => {
     };
   };
 
-  const results = calculate();
+  const results = useMemo(() => calculate(), [entryPrice, stopLoss, takeProfit, volume, selectedPair, selectedAccountSize]);
 
   return (
     <main className="max-w-xl mx-auto px-6 py-8 bg-gray-900 rounded-lg shadow-lg text-white mt-20">
