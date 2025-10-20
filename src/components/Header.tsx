@@ -2,12 +2,21 @@ import React from 'react';
 
 const Header: React.FC = () => {
   return (
-    <header className="text-center py-6 bg-[#111827] border-b border-gray-700 shadow-md">
-      <h1 className="text-4xl font-bold text-white">Piplator: Pip Calculator for MT4/MT5</h1>
-      <p className="text-gray-400 mt-2 text-base">
-        Instant SL, TP and Risk Management – No More Manual Math.
-        Mainly for US Currencies for now.
-      </p>
+    <header className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-emerald-600 border-b border-blue-500/20 shadow-2xl">
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="text-center space-y-3">
+          <h1 className="text-white">
+            <span className="bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">Piplator</span>
+            <span className="text-blue-100">: Pip Calculator for MT4/MT5</span>
+          </h1>
+          <p className="text-blue-100 max-w-2xl mx-auto">
+            Instant SL, TP and Risk Management – No More Manual Math.
+          </p>
+          <p className="text-blue-200/80 text-sm">
+            Mainly for US Currencies for now.
+          </p>
+        </div>
+      </div>
     </header>
   );
 };
